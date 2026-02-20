@@ -81,3 +81,8 @@ El script muestra:
 - **Semilla** para reproducibilidad
 - **Generación por lotes** (no imprimir dentro de bucles grandes)
 
+## Diagrama Entidad–Relación 
+
+Aquí se muestra el modelo ER utilizado en la práctica:
+
+<img src="https://github.com/user-attachments/assets/77f6a4f2-e7c0-44ae-88f6-579aacd6202a" width="65%">
