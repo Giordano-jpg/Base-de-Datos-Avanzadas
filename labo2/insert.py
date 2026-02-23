@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import psycopg
+import random
+
+import time # para medir tiempos de inserción
 
 from faker import Faker
 
@@ -12,7 +15,13 @@ faker = Faker("es_ES")
 Faker.seed(123)
 faker.seed_instance(123)
 
+# ----------------------------- 
+num_profesores = 5 
+num_cursos = 10 
+num_alumnos = 15 
+alumnos_por_curso = 3 # cuántos alumnos por curso
 
+start = time.time() # para medir el tiempo total de inserción
 
 def insert_profesor(nombre: str, email: str) -> int:
     """Inserta un profesor en la tabla `profesores` y devuelve su `profesor_id`.
@@ -100,32 +109,32 @@ def matricular(alumno_id: int, curso_id: int) -> None:
 
 
 if __name__ == "__main__":
-    reps = 10  # Número de registros de ejemplo a insertar
-    for i in range(reps):
-        # Aquí pruebo las funciones con datos de ejemplo
-        # Genero datos falsos con Faker:
-        # - name() → un nombre completo
-        # - safe_email() → un email válido al azar
-        # - word().capitalize() → una palabra con mayúscula
-        prof_name = faker.name()
-        prof_email = faker.safe_email()
+    # 1) Profesores - genero datos falsos con Faker (name() y safe_email())
+    profesores_ids = []
+    for _ in range(num_profesores):
+        pid = insert_profesor(faker.name(), faker.safe_email())  # name() → nombre completo, safe_email() → email válido
+        profesores_ids.append(pid)  # la BD lo genera automáticamente con SERIAL (numeros incrementales)
 
-        # Inserto el profesor y guardo su id (la BD lo genera automáticamente)
-        profesor_id = insert_profesor(prof_name, prof_email)
+    # 2) Cursos - asigno cada curso a un profesor al azar
+    cursos_ids = []
+    for _ in range(num_cursos):
+        profesor_id = random.choice(profesores_ids)  # selecciono profesor aleatorio
+        cid = insert_curso(faker.word().capitalize(), profesor_id)  # word().capitalize() → palabra con mayúscula
+        cursos_ids.append(cid)
 
-        # Creo un curso y lo asigno al profesor que acabo de insertar
-        curso_nombre = faker.word().capitalize()
-        curso_id = insert_curso(curso_nombre, profesor_id)
+    # 3) Alumnos - genero con datos falsos similares a profesores
+    alumnos_ids = []
+    for _ in range(num_alumnos):
+        aid = insert_alumno(faker.name(), faker.safe_email())
+        alumnos_ids.append(aid)
 
-        # Creo un alumno y lo matriculo en el curso
-        alumno_name = faker.name()
-        alumno_email = faker.safe_email()
-        alumno_id = insert_alumno(alumno_name, alumno_email)
+    # 4) Matrículas (N:M) - relaciono alumnos con cursos
+    for curso_id in cursos_ids:
+        alumnos_elegidos = random.sample(alumnos_ids, alumnos_por_curso)  # selecciono sin repetir
+        for alumno_id in alumnos_elegidos:
+            matricular(alumno_id, curso_id)  # creo la relación alumno-curso
 
-        # Hago la relación: este alumno se matricula en este curso
-        matricular(alumno_id, curso_id)
+    print("Datos insertados correctamente.")
 
-        # Muestro los ids que se crearon para verificar que funcionó
-        print(
-            f"Profesor {profesor_id}, curso {curso_id} y alumno {alumno_id} insertados correctamente."
-        )
+    end = time.time() # tiempo final para medir el tiempo total de inserción
+    print("Tiempo total:", end - start, "segundos")
