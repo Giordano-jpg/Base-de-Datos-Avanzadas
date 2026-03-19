@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Nueva Matrícula — MVC labo2{% endblock %}
+{% block content %}
+  <h1>Matricular un alumno en un curso</h1>
+  <form action="{{ url_for('matriculas.create') }}" method="post">
+    <label for="alumno_id">ID Alumno:</label>
+    <input type="number" id="alumno_id" name="alumno_id" required>
+
+    <label for="curso_id">ID Curso:</label>
+    <input type="number" id="curso_id" name="curso_id" required>
+
+    <button type="submit">Matricular</button>
+  </form>
+  <p><a href="{{ url_for('matriculas.list_') }}">Volver a la lista de matrículas</a></p>
+{% endblock %}

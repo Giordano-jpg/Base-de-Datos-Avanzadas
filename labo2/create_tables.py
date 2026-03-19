@@ -44,6 +44,8 @@ DDL = (
     CREATE TABLE IF NOT EXISTS matriculas (
         alumno_id INTEGER NOT NULL,
         curso_id INTEGER NOT NULL,
+        -- created_at: fecha de matrícula, se asigna automáticamente al insertar
+        created_at TIMESTAMP NOT NULL DEFAULT now(),
         PRIMARY KEY (alumno_id, curso_id),
         FOREIGN KEY (alumno_id)
             REFERENCES alumnos(alumno_id)
@@ -65,7 +67,16 @@ def create_tables() -> None:
         with conn.cursor() as cur:
             for stmt in DDL:
                 cur.execute(stmt)
-    print("Tables created (or already existed).")
+
+            # Crear índices:
+            # Índice ->  cursos(profesor_id) para acelerar consultas por profesor
+            cur.execute("CREATE INDEX IF NOT EXISTS ind_cursos_profesor ON cursos(profesor_id);")
+            # Índice -> matriculas(curso_id) para acelerar consultas por curso
+            cur.execute("CREATE INDEX IF NOT EXISTS ind_matriculas_curso ON matriculas(curso_id);")
+            # Índice -> alumnos(email) para acelerar búsquedas por email (único)
+            cur.execute("CREATE UNIQUE INDEX IF NOT EXISTS ind_alumnos_email ON alumnos(email);")
+
+    print("Tables created and indexes (or already existed).")
 
 
 if __name__ == "__main__":

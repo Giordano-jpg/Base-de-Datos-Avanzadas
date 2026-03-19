@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Alumno — MVC labo2{% endblock %}
+
+{% block content %}
+  <h1>Alta de nuevo alumno</h1>
+  <form action="{{ url_for('alumnos.create') }}" method="post">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">Crear Alumno</button>
+  </form>
+  <p><a href="{{ url_for('alumnos.list_') }}">Volver a la lista de alumnos</a></p>
+{% endblock %}

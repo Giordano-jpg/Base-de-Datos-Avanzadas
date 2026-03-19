@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Curso {{ curso.nombre }} — MVC labo2{% endblock %}
+
+{% block content %}
+  <h1>Curso: {{ curso.nombre }}</h1>
+  <p>Profesor ID: {{ curso.profesor_id }}</p>
+  <strong>Alumnos matriculados:</strong>
+  <ul class="list">
+    {% for alumno in alumnos %}
+      <li>{{ alumno.id }} — {{ alumno.nombre }} — {{ alumno.email }}</li>
+    {% else %}
+      <li class="empty">No hay alumnos matriculados en este curso.</li>
+    {% endfor %}
+  </ul>
+  <p><a href="{{ url_for('cursos.list_') }}">Volver a la lista de cursos</a></p>
+{% endblock %}

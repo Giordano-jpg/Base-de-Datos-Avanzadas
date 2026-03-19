@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Profesores — MVC labo2{% endblock %}
+{% block content %}
+  <h1>Profesores</h1>
+  <ul class="list">
+    {% for profesor in profesores %}
+    <li>{{ profesor.id }} — {{ profesor.nombre }} — {{ profesor.email }}</li>
+    {% else %}
+    <li class="empty">No hay profesores.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

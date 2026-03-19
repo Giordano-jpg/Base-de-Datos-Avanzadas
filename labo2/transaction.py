@@ -5,60 +5,51 @@ from psycopg import errors
 
 from config import load_config
 
+from models.db import create_matricula
 
-def add_part_atomic(part_name: str, vendor_id: int) -> int:
-    """Single atomic operation: insert ONE part and assign it to ONE vendor.
+# Caso válido
+try:
+    create_matricula(1, 1)  # alumno y curso existentes
+except Exception as exc:
+    print("Error:", exc)
 
-    If vendor_id does not exist, the whole operation fails and nothing is inserted.
+# Caso intencionado (fallo/rollback)
+try:
+    create_matricula(1, 999999)  # curso que no existe
+except Exception:
+    print("Transacción fallida como se esperaba, no hay datos parciales.")
+
+
+'''def add_matricula_atomic(alumno_id: int, curso_ids: list[int]):
+    """Single atomic operation: insert ONE matricula and assign it to ONE or more cursos.
+
+    If curso_id does not exist, the whole operation fails and nothing is inserted.
     """
-    sql_part = "INSERT INTO parts(part_name) VALUES (%s) RETURNING part_id;"
-    sql_rel = "INSERT INTO vendor_parts(vendor_id, part_id) VALUES (%s, %s);"
-
-    cfg = load_config()
-    with psycopg.connect(**cfg) as conn:
-        with conn.cursor() as cur:
-            cur.execute(sql_part, (part_name,))
-            part_id = cur.fetchone()[0]
-            cur.execute(sql_rel, (vendor_id, part_id))
-    return int(part_id)
-
-
-def add_part_transactional(part_name: str, vendor_ids: list[int]) -> int:
-    """Transactional flow: insert a part and assign it to multiple vendors.
-
-    This is a multi-step business flow. If any step fails (e.g., a vendor id does not exist),
-    the transaction is rolled back and the part is NOT inserted.
-    """
-    sql_part = "INSERT INTO parts(part_name) VALUES (%s) RETURNING part_id;"
-    sql_rel = "INSERT INTO vendor_parts(vendor_id, part_id) VALUES (%s, %s);"
+    sql = "INSERT INTO matriculas (alumno_id, curso_id) VALUES (%s, %s);"
 
     cfg = load_config()
     with psycopg.connect(**cfg) as conn:
         try:
             with conn.cursor() as cur:
-                cur.execute(sql_part, (part_name,))
-                part_id = cur.fetchone()[0]
-                for v_id in vendor_ids:
-                    cur.execute(sql_rel, (v_id, part_id))
-            # If we reach here, context manager commits automatically.
-            return int(part_id)
+                for curso_id in curso_ids:
+                    cur.execute(sql, (alumno_id, curso_id))
+                print("Transacción completada")
         except errors.ForeignKeyViolation as exc:
-            # Raising triggers rollback by the connection context manager.
             print("Foreign key violation -> ROLLBACK:", exc)
             raise
 
 
 if __name__ == "__main__":
-    # Example 1: atomic operation (should succeed if vendor_id=1 exists)
+    # Example 1: atomic operation (should succeed if alumno_id=1 and curso_id=1 exist)
     try:
-        p1 = add_part_atomic("Power Amplifier (atomic)", 1)
-        print("Inserted part (atomic):", p1)
+        add_matricula_atomic(1, [1])
+        print(f"Alumno {alumno_id} matriculado en curso {curso_id}")
     except Exception as exc:
-        print("Atomic insert failed:", exc)
+        print("Error:", exc)
 
-    # Example 2: transactional flow (force a failure with a non-existing vendor id)
+    # Example 2: transactional flow (force a failure with a non-existing curso id)
     try:
-        p2 = add_part_transactional("Power Amplifier (tx)", [1, 999999])
-        print("Inserted part (tx):", p2)
+        add_matricula_atomic(1, [1, 999999])
     except Exception:
-        print("Transactional flow failed as expected. Check that no partial data was inserted.")
+        print(f"Transactional flow failed as expected. Intentó matricular {alumno_id} en cursos {curso_ids}, but no partial data was inserted.")
+        '''
