@@ -8,8 +8,19 @@
 </head>
 <body>
   <nav class="nav">
+  {% if session.get('username') %}
     <a href="{{ url_for('main.index') }}">Inicio</a>
-  </nav>
+    <a href="{{ url_for('profesores.list_') }}">Profesores</a>
+    <a href="{{ url_for('alumnos.list_') }}">Alumnos</a>
+    <a href="{{ url_for('cursos.list_') }}">Cursos</a>
+    <a href="{{ url_for('matriculas.list_') }}">Matrículas</a>
+    <form method="post" action="{{ url_for('auth.logout') }}" class="nav-logout">
+      <button type="submit">Cerrar sesión</button>
+    </form>
+  {% else %}
+    <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
+  {% endif %}
+</nav>
   <main class="content">
     {% block content %}{% endblock %}
   </main>

@@ -10,9 +10,9 @@ Ejecución:
 """
 from __future__ import annotations
 
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template, request, session, url_for
 
-from routes import main_bp, profesores_bp, alumnos_bp, cursos_bp, matriculas_bp
+from routes import auth_bp, main_bp, profesores_bp, alumnos_bp, cursos_bp, matriculas_bp
 
 
 def create_app() -> Flask:
@@ -21,14 +21,25 @@ def create_app() -> Flask:
 
     # Configuración mínima (evitar hardcodear en código)
     app.config["ENV"] = "development"
-    app.config["SECRET_KEY"] = "dev-change-in-production"
+    app.config["SECRET_KEY"] = "1234"
 
     # Blueprints por recurso
+    app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(profesores_bp)
     app.register_blueprint(alumnos_bp)
     app.register_blueprint(cursos_bp)
     app.register_blueprint(matriculas_bp)
+
+    @app.before_request
+    def require_login():
+        if request.endpoint in (None, "auth.login", "static"):
+            return None
+        if request.endpoint and request.endpoint.startswith("auth."):
+            return None
+        if "username" not in session:
+            return redirect(url_for("auth.login"))
+        return None
 
     # Páginas de error (misma base que el resto)
     @app.errorhandler(404)

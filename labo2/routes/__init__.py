@@ -1,9 +1,10 @@
 # Blueprints: rutas agrupadas por recurso (main, profesores, alumnos, cursos, matriculas).
 
+from routes.auth import auth_bp
 from routes.main import main_bp
 from routes.profesores import profesores_bp
 from routes.alumnos import alumnos_bp
 from routes.cursos import cursos_bp
 from routes.matriculas import matriculas_bp
 
-__all__ = ["main_bp", "profesores_bp", "alumnos_bp", "cursos_bp", "matriculas_bp"]
+__all__ = ["auth_bp", "main_bp", "profesores_bp", "alumnos_bp", "cursos_bp", "matriculas_bp"]
