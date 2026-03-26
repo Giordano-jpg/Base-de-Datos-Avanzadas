@@ -3,8 +3,8 @@
 ## 0) Preparación
 ```bash
 python3 -m venv .venv # Windows: python -m venv .venv (solo la primera vez)
+# Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process (solo la primera vez)
 source .venv/bin/activate # Windows: .\.venv\Scripts\Activate.ps1
-# Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 pip install -U pip
 pip install -r requirements.txt
 ```
