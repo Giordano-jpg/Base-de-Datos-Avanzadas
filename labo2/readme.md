@@ -1,5 +1,5 @@
 # Requisitos previos
-1. Tener instalado Docker Desktop (win_11 con WSL)
+1. Tener instalado Docker Desktop (para windows 11 con WSL)
 2. Comprobar que está instalado: (bash)
 ```bash
 docker --version
@@ -19,68 +19,72 @@ docker compose up airflow-init
 ```
 airflow/
 ├── docker-compose.yaml
-└── dags/
-    ├── dag_de_usuarios.py
-    ├── postgres_pipeline_simple.py
-    └── scripts/
+├── dags/
+│   ├── dag_de_usuarios.py
+│   ├── postgres_pipeline_simple.py
+│   └── scripts/
+│       ├── config.py
+│       ├── connect.py
+│       ├── create_sqlite_tables.py
+│       ├── create_tables.py
+│       ├── database.ini
+│       ├── insert.py
+│       ├── insert_demo_user.py
+│       ├── models/
+│       └── instance/
+├── requirements.txt
+└── Base-de-Datos-Avanzadas/
+    ├── README.md
+    ├── fake/
+    ├── requirements.txt
+    └── labo2/
+        ├── app.py
+        ├── routes/
+        │   ├── main.py
+        │   ├── alumnos.py
+        │   ├── profesores.py
+        │   ├── cursos.py
+        │   └── matriculas.py
+        ├── models/
+        │   ├── __init__.py
+        │   ├── db.py
+        │   ├── entities.py
+        │   └── auth_db.py
+        ├── templates/
+        │   ├── index.html
+        │   ├── alumnos.html
+        │   ├── alumnos_curso.html
+        │   ├── create_alumno.html
+        │   ├── cursos.html
+        │   ├── cursos_alumno.html
+        │   ├── cursos_profesor.html
+        │   ├── profesores.html
+        │   ├── matriculas.html
+        │   ├── create_matricula.html
+        │   ├── base.html
+        │   └── auth/login.html
+        ├── static/
+        ├── instance/auth.db
         ├── config.py
         ├── connect.py
+        ├── consulta_1_2.py
         ├── create_sqlite_tables.py
         ├── create_tables.py
-        ├── database.ini
+        ├── delete.py
+        ├── fetch_all.py
+        ├── fetch_many.py
+        ├── fetch_one.py
         ├── insert.py
+        ├── insert_demo_data.py
         ├── insert_demo_user.py
-        ├── models/
-        └── instance/
-
-labo2/
-├── app.py
-├── routes/
-│   ├── main.py
-│   ├── alumnos.py
-│   ├── profesores.py
-│   ├── cursos.py
-│   └── matriculas.py
-├── models/
-│   ├── __init__.py
-│   ├── db.py
-│   ├── entities.py
-│   └── auth_db.py
-├── templates/
-│   ├── index.html
-│   ├── alumnos.html
-│   ├── alumnos_curso.html
-│   ├── create_alumno.html
-│   ├── cursos.html
-│   ├── cursos_alumno.html
-│   ├── cursos_profesor.html
-│   ├── profesores.html
-│   ├── matriculas.html
-│   ├── create_matricula.html
-│   ├── base.html
-│   └── auth/login.html
-├── static/
-├── instance/auth.db
-├── config.py
-├── connect.py
-├── consulta_1_2.py
-├── create_sqlite_tables.py
-├── create_tables.py
-├── delete.py
-├── fetch_all.py
-├── fetch_many.py
-├── fetch_one.py
-├── insert.py
-├── insert_demo_data.py
-├── insert_demo_user.py
-├── read_blob.py
-├── transaction.py
-├── update.py
-├── write_blob.py
-├── call_function.py
-├── call_stored_procedure.py
-├── database.ini
-└── requirements.txt
+        ├── read_blob.py
+        ├── transaction.py
+        ├── update.py
+        ├── write_blob.py
+        ├── call_function.py
+        ├── call_stored_procedure.py
+        ├── database.ini
+        └── requirements.txt
 ```
 
 # Cómo levantar Airflow

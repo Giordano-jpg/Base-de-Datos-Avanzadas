@@ -3,3 +3,4 @@
 
 psycopg[binary,pool]==3.2.13
 Faker==22.6.0
+Flask>=3.0
