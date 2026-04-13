@@ -108,12 +108,26 @@ airflow/
         └── requirements.txt
 ```
 
-# Cómo levantar Airflow
+# Requirements
 
-En el archivo `airflow/.env`, añadir al final:
+1. En el archivo `airflow/.env`, añadir al final:
 ```env
 _PIP_ADDITIONAL_REQUIREMENTS=psycopg[binary,pool]==3.2.13 Faker==22.6.0
 ```
+
+2. En el archivo `docker-compose.yaml`, ubicar aproximadamente en la línea ~96/339:
+```bash
+  volumes:
+    - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+    - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
+    - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
+    - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+```
+...y añadir lo siguiente al final:
+```bash
+    - ./Base-de-Datos-Avanzadas/labo2/instance:/opt/airflow/dags/scripts/instance
+```
+
 
 # Cómo levantar Airflow
 En segundo plano (detached)
