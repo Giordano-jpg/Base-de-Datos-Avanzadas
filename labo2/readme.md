@@ -10,7 +10,24 @@ mkdir airflow
 cd airflow
 curl -LfO 'https://airflow.apache.org/docs/apache-airflow/x.x.x/docker-compose.yaml'
 ```
-4. Inicializar Ariflow (solo la primera vez):
+4. Crear archivo de variables de entorno (.env)
+```bash
+touch .env
+nano .env
+```
+Dentro de `.env`, añadir lo siguiente:
+```env
+AIRFLOW_UID=50000     # UID para evitar problemas de permisos en Docker
+FERNET_KEY=           # Clave de cifrado (vacía para pruebas)
+```
+> Opcional; para no tener que ejecutar `sudo` para cada instrucción o tener problemas de permiso al editar código dentro de Airflow, **ejecutar**: 
+```bash
+sudo chown -R $USER:$USER ~/Documentos/airflow
+sudo usermod -aG docker $USER
+```
+> (Reiniciar para aplicar el cambio de la ultima instruccion)
+
+5. Inicializar Airflow (solo la primera vez):
 ```bash
 docker compose up airflow-init
 ```
@@ -31,6 +48,10 @@ airflow/
 │       ├── insert.py
 │       ├── insert_demo_user.py
 │       ├── models/
+│       │   ├── auth_db.py
+│       │   ├── db.py
+│       │   ├── entities
+│       │   └── __init__.py
 │       └── instance/
 ├── requirements.txt
 └── Base-de-Datos-Avanzadas/
@@ -85,6 +106,13 @@ airflow/
         ├── call_stored_procedure.py
         ├── database.ini
         └── requirements.txt
+```
+
+# Cómo levantar Airflow
+
+En el archivo `airflow/.env`, añadir al final:
+```env
+_PIP_ADDITIONAL_REQUIREMENTS=psycopg[binary,pool]==3.2.13 Faker==22.6.0
 ```
 
 # Cómo levantar Airflow
