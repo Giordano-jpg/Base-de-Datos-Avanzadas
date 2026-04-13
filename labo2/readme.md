@@ -52,8 +52,7 @@ airflow/
 │       │   ├── db.py
 │       │   ├── entities
 │       │   └── __init__.py
-│       └── instance/
-├── requirements.txt
+│       └── instance/.gitkeep
 └── Base-de-Datos-Avanzadas/
     ├── README.md
     ├── fake/
